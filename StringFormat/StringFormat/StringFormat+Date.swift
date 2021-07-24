@@ -96,7 +96,9 @@ extension StringFormat {
 
     public class func roundDateToDays(_ timestamp: Int32) -> Int32 {
         var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        if let timeZone = TimeZone(secondsFromGMT: 0) {
+            calendar.timeZone = timeZone
+        }
         var components = calendar.dateComponents(Set([.era, .year, .month, .day]), from: Date(timeIntervalSince1970: Double(timestamp)))
         components.hour = 0
         components.minute = 0

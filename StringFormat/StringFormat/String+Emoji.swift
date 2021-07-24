@@ -34,8 +34,8 @@ public extension UnicodeScalar {
         }
     }
     
-    static var ZeroWidthJoiner = UnicodeScalar(0x200D)!
-    static var VariationSelector = UnicodeScalar(0xFE0F)!
+    static var ZeroWidthJoiner: Unicode.Scalar? = UnicodeScalar(0x200D)
+    static var VariationSelector: Unicode.Scalar? = UnicodeScalar(0xFE0F)
 }
 
 private final class FrameworkClass: NSObject {
@@ -104,12 +104,14 @@ public extension String {
     
     var normalizedEmoji: String {
         var string = ""
-        
+        guard let variationSelector = UnicodeScalar.VariationSelector else {
+            return string
+        }
         var nextShouldBeVariationSelector = false
         for scalar in self.unicodeScalars {
             if nextShouldBeVariationSelector {
-                if scalar != UnicodeScalar.VariationSelector {
-                    string.unicodeScalars.append(UnicodeScalar.VariationSelector)
+                if scalar != variationSelector {
+                    string.unicodeScalars.append(variationSelector)
                 }
                 nextShouldBeVariationSelector = false
             }
@@ -120,7 +122,7 @@ public extension String {
         }
         
         if nextShouldBeVariationSelector {
-            string.unicodeScalars.append(UnicodeScalar.VariationSelector)
+            string.unicodeScalars.append(variationSelector)
         }
         
         return string
